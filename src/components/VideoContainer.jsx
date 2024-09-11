@@ -1,36 +1,35 @@
-import { useEffect } from "react"
-import { GOOGLE_API_KEY } from "./utills/constant";
+import { useEffect, useState } from "react";
+import { YOUTUBE_VIDEOS_API } from "./utills/constant";
+import VideoCard from "./VideoCard";
+import { Link } from "react-router-dom";
+
 
 const VideoContainer = () => {
+
+    const [videos, setVideos] = useState([])
 
 
     useEffect(() => {
         getVideos();
-    }, [])
+    }, []);
 
     const getVideos = async () => {
-        const data = await fetch("https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&regionCode=US&key=" + GOOGLE_API_KEY);
-        const json = await data.json()
-        console.log(json)
-    };
-    fetch('https://youtube.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=US&key=' + GOOGLE_API_KEY)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok: ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data); // Handle the data
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-        });
+        const data = await fetch(YOUTUBE_VIDEOS_API)
+        const json = await data.json();
+        setVideos(json.items)
 
+
+    };
 
     return (
-        <div>VideoContainer</div>
-    )
-}
+        <div className="flex flex-wrap">
+            {videos.map((video) => (
+                <Link to={"/watch?v=" + video.id} >
+                    <VideoCard key={video.id} info={video} />
+                </Link>
+            ))}
+        </div>
+    );
+};
 
-export default VideoContainer
+export default VideoContainer;
