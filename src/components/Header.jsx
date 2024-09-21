@@ -1,9 +1,32 @@
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoSearchOutline } from "react-icons/io5";
-import { FaUserCircle } from "react-icons/fa";
+import { FaBullseye, FaUserCircle } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { toggleMenu } from "./utills/appSlice";
+import { useEffect, useState } from "react";
+import { YOUTUBE_SEARCH_API } from "./utills/constant";
 const Header = () => {
+
+    const [searchQuery, setSearchQuery] = useState("")
+    const [suggestions, setSuggestions] = useState([])
+    const [showSuggestions, setShowSuggestions] = useState(false)
+
+    useEffect(() => {
+
+        const timer = setTimeout(() => getSearchSuggestions(), 200);
+
+        return () => {
+            clearTimeout(timer)
+        };
+
+    }, [searchQuery])
+
+    const getSearchSuggestions = async () => {
+        const data = await fetch(YOUTUBE_SEARCH_API + searchQuery)
+        const json = await data.json()
+        setSuggestions(json[1])
+
+    }
 
     const dispatch = useDispatch()
 
@@ -25,10 +48,28 @@ const Header = () => {
 
 
                 </div>
-                <div className="col-span-10 px-10 flex  items-center justify-center
+                <div className="col-span-10 px-10 
                 ">
-                    <input type=" text" className="h-10 w-1/2 border border-gray-400 p-2 rounded-l-full" />
-                    <button className="h-10 border border-gray-400 px-5 p-2  rounded-r-full bg-gray-200 "><IoSearchOutline /></button>
+                    <div>
+                        <input type=" text" className="h-10 w-1/2 border border-gray-400 p-2 rounded-l-full" value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onFocus={() => setShowSuggestions(true)}
+                            onBlur={() => setShowSuggestions(false)}
+                        />
+                        <button className="h-10 border border-gray-400 px-5 p-2  rounded-r-full bg-gray-200 "><IoSearchOutline /></button>
+                    </div>
+                    {showSuggestions && (
+                        <div className="fixed bg-white py-2 px-2 w-[37rem] shadow-lg rounded-lg border border-gray-100">
+                            <ul>
+                                {suggestions.map((s) => (
+                                    <li key={s} className="shadow-sm px-3 py-2 hover:bg-gray-100">{s}</li>
+
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+
                 </div>
                 <div className="col-span-1">
                     <FaUserCircle className="h-7 w-7" />
