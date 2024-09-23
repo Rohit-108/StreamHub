@@ -6,6 +6,7 @@ import { toggleMenu } from "./utills/appSlice";
 import { useEffect, useState } from "react";
 import { YOUTUBE_SEARCH_API } from "./utills/constant";
 import { cacheResults } from "./utills/searchSlice"
+import { useSelector } from "react-redux";
 const Header = () => {
 
     const [searchQuery, setSearchQuery] = useState("")
