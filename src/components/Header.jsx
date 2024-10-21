@@ -1,6 +1,6 @@
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoSearchOutline } from "react-icons/io5";
-import { FaBullseye, FaUserCircle } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { toggleMenu } from "./utills/appSlice";
 import { useEffect, useState } from "react";
@@ -31,6 +31,7 @@ const Header = () => {
     }, [searchQuery])
 
     const getSearchSuggestions = async () => {
+        console.log("API Called" + searchQuery)
         const data = await fetch(YOUTUBE_SEARCH_API + searchQuery)
         const json = await data.json()
         setSuggestions(json[1])
