@@ -16,14 +16,14 @@ const Header = () => {
     const searchCache = useSelector((store) => store.search)
     const dispatch = useDispatch()
     useEffect(() => {
-
-        const timer = setTimeout(() => getSearchSuggestions(), 200);
-        if (searchCache[searchQuery]) {
-            setSuggestions(searchCache[searchQuery]);
-        }
-        else {
-            getSearchSuggestions()
-        }
+        const timer = setTimeout(() => {
+            if (searchCache[searchQuery]) {
+                setSuggestions(searchCache[searchQuery]);
+            }
+            else {
+                getSearchSuggestions();
+            }
+        }, 200);
         return () => {
             clearTimeout(timer)
         };
