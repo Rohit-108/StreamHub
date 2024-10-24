@@ -60,7 +60,7 @@ const Comment = ({ data }) => {
     const { name, text } = data;
 
     return (
-        <div className="flex shadow-sm bg-gray-100 p-2 my-2 rounded-lg">
+        <div className="flex shadow-sm bg-gray-100 p-2 my-2 rounded-lg ">
             <img
                 className="w-12 h-12"
                 alt="user"
@@ -79,7 +79,7 @@ const CommentsList = ({ comments }) => {
         <div key={index}>
             <Comment data={comment} />
             {comment.replies.length > 0 && (
-                <div className="pl-5  ml-5">
+                <div className="pl-5  ml-5 border border-l-black">
                     <CommentsList comments={comment.replies} />
                 </div>
             )}
