@@ -10,6 +10,11 @@ import { generateRandomName, makeRandomMessage } from "./utills/helper";
 
 const LiveChat = () => {
     const [liveMessage, setLiveMessage] = useState("")
+
+
+
+
+
     const dispatch = useDispatch();
     const chatMessages = useSelector((store) => store.chat.messages)
 
@@ -36,7 +41,7 @@ const LiveChat = () => {
     return (
         <>
             <div className="flex flex-col w-full">
-                <div className="w-full h-[500px] ml-2 p-2 border border-black bg-slate-100 rounded-lg overflow-y-scroll flex flex-col-reverse">
+                <div className="w-full h-[450px] ml-2 p-2 border border-black bg-slate-100 rounded-lg overflow-y-scroll flex flex-col-reverse">
                     <div>
                         {chatMessages.map((c, index) => (
                             <ChatMessage key={index} name={c.name} message={c.message} />

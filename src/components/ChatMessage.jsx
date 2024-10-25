@@ -1,6 +1,3 @@
-
-
-
 const ChatMessage = ({ name, message }) => {
     return (
         <div className="flex items-center shadow-sm">
