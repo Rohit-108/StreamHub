@@ -3,29 +3,43 @@ import { YOUTUBE_VIDEOS_API } from "./utills/constant";
 import VideoCard from "./VideoCard";
 import { Link } from "react-router-dom";
 
-
 const VideoContainer = () => {
-
-    const [videos, setVideos] = useState([])
-
+    const [videos, setVideos] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         getVideos();
     }, []);
 
     const getVideos = async () => {
-        const data = await fetch(YOUTUBE_VIDEOS_API)
-        const json = await data.json();
-        console.log(json);
-        setVideos(json.items)
-
-
+        try {
+            const response = await fetch(YOUTUBE_VIDEOS_API);
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const json = await response.json();
+            console.log(json);
+            setVideos(json.items);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
+    if (loading) {
+        return <div className="text-center p-4">Loading videos...</div>;
+    }
+
+    if (error) {
+        return <div className="text-center p-4 text-red-600">Error: {error}</div>;
+    }
+
     return (
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap justify-center">
             {videos.map((video) => (
-                <Link key={video.id} to={"/watch?v=" + video.id} >
+                <Link key={video.id} to={"/watch?v=" + video.id} className="m-2">
                     <VideoCard info={video} />
                 </Link>
             ))}
