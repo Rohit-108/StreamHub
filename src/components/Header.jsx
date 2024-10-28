@@ -11,93 +11,94 @@ const Header = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
-
-    const searchCache = useSelector((store) => store.search);
     const dispatch = useDispatch();
+    const searchCache = useSelector((store) => store.search);
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            if (searchCache[searchQuery]) {
-                setSuggestions(searchCache[searchQuery]);
+            if (searchQuery) {
+                if (searchCache[searchQuery]) {
+                    setSuggestions(searchCache[searchQuery]);
+                } else {
+                    getSearchSuggestions();
+                }
             } else {
-                getSearchSuggestions();
+                setSuggestions([]); // Clear suggestions if input is empty
             }
         }, 200);
-        return () => {
-            clearTimeout(timer);
-        };
+        return () => clearTimeout(timer);
     }, [searchQuery]);
 
     const getSearchSuggestions = async () => {
-        console.log("API Called" + searchQuery);
-        const data = await fetch(YOUTUBE_SEARCH_API + searchQuery);
-        const json = await data.json();
-        setSuggestions(json[1]);
+        try {
+            const response = await fetch(`${YOUTUBE_SEARCH_API}${searchQuery}`);
+            if (!response.ok) throw new Error("Network response was not ok");
+            const json = await response.json();
+            setSuggestions(json[1]); // Assuming json[1] contains the suggestions
 
-        dispatch(
-            cacheResults({
-                [searchQuery]: json[1],
-            })
-        );
+            dispatch(cacheResults({ [searchQuery]: json[1] }));
+        } catch (error) {
+            console.error("Error fetching search suggestions:", error);
+            setSuggestions([]); // Clear suggestions on error
+        }
     };
 
-    const togglehandler = () => {
+    const toggleHandler = () => {
         dispatch(toggleMenu());
     };
 
+    const handleSuggestionClick = (suggestion) => {
+        setSearchQuery(suggestion);
+        setShowSuggestions(false);
+    };
+
     return (
-        <>
-            <div className="grid grid-flow-col p-3 mx-2 shadow-lg items-center">
-                {/* Left Section */}
-                <div className="flex items-center col-span-1 space-x-4">
-                    <RxHamburgerMenu
-                        className="h-7 w-7 cursor-pointer"
-                        onClick={togglehandler}
-                    />
-                    <img
-                        className="h-10 sm:h-12"
-                        src="https://cdn.mos.cms.futurecdn.net/8gzcr6RpGStvZFA2qRt4v6-650-80.jpg.webp"
-                        alt="youtube"
-                    />
+        <div className="grid grid-flow-col p-3 mx-2 shadow-lg items-center relative">
+            <div className="flex col-span-1">
+                <div className="flex items-center cursor-pointer" onClick={toggleHandler}>
+                    <RxHamburgerMenu className="h-7 w-7" />
                 </div>
-
-                {/* Middle Section (Search Input) */}
-                <div className="col-span-10 flex justify-center relative">
-                    <div className="flex w-full max-w-xl">
-                        <input
-                            type="text"
-                            className="h-10 w-full border border-gray-400 p-2 rounded-l-full text-sm sm:text-base"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onFocus={() => setShowSuggestions(true)}
-                            onBlur={() => setShowSuggestions(false)}
-                        />
-                        <button className="h-10 border border-gray-400 px-5 p-2 rounded-r-full bg-gray-200">
-                            <IoSearchOutline className="h-5 w-5" />
-                        </button>
-                    </div>
-                    {showSuggestions && (
-                        <div className="absolute top-full mt-2 bg-white py-2 w-full max-w-xl shadow-lg rounded-lg border border-gray-100 z-10">
-                            <ul>
-                                {suggestions.map((s, index) => (
-                                    <li
-                                        key={index}
-                                        className="shadow-sm px-3 py-2 hover:bg-gray-100 text-sm sm:text-base"
-                                    >
-                                        {s}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-                </div>
-
-                {/* Right Section */}
-                <div className="flex justify-end col-span-1">
-                    <FaUserCircle className="h-7 w-7 sm:h-8 sm:w-8" />
-                </div>
+                <img
+                    className="h-16 mx-2"
+                    src="https://cdn.mos.cms.futurecdn.net/8gzcr6RpGStvZFA2qRt4v6-650-80.jpg.webp"
+                    alt="YouTube"
+                />
             </div>
-        </>
+            <div className="col-span-10 flex items-center px-10">
+                <div className="flex flex-grow relative">
+                    <input
+                        type="text"
+                        aria-label="Search"
+                        className="h-10 w-full border border-gray-400 p-2 rounded-l-full px-3"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onFocus={() => setShowSuggestions(true)}
+                        onBlur={() => setTimeout(() => setShowSuggestions(false), 100)} // Delay to allow click on suggestion
+                    />
+                    <button className="h-10 border border-gray-400 px-5 rounded-r-full bg-gray-200 flex items-center justify-center">
+                        <IoSearchOutline />
+                    </button>
+                </div>
+                {showSuggestions && suggestions.length > 0 && (
+                    <div className="bg-white py-2 px-2 w-full max-w-md shadow-lg rounded-lg border border-gray-100 absolute z-10">
+                        <ul>
+                            {suggestions.map((suggestion, index) => (
+                                <li
+                                    key={index}
+                                    className="shadow-sm px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                                    onMouseDown={() => handleSuggestionClick(suggestion)} // Use onMouseDown to prevent blur on click
+                                >
+                                    {suggestion}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </div>
+            <div className="col-span-1">
+                <FaUserCircle className="h-7 w-7" />
+            </div>
+        </div>
     );
 };
 
