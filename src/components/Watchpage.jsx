@@ -1,17 +1,33 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { closeMenu } from "./utills/appSlice";
 import { useSearchParams } from "react-router-dom";
 import CommentSection from "./CommentSection";
 import LiveChat from "./LiveChat";
+import { YOUTUBE_VIDEO_DETAIL_API } from "./utills/constant";
 
 const Watchpage = () => {
+    const [videoData, setVideoData] = useState([])
     const [searchParams] = useSearchParams();
     const dispatch = useDispatch();
+    const videoId = searchParams.get("v");
+
 
     useEffect(() => {
         dispatch(closeMenu());
     }, [dispatch]);
+
+
+    useEffect(() => {
+        videoDetails()
+    }, [])
+
+    const videoDetails = async () => {
+        const response = await fetch(`${YOUTUBE_VIDEO_DETAIL_API}${videoId}`);
+        const json = await response.json();
+        console.log(json)
+        setVideoData(json.items[0])
+    }
 
     return (
         <div className="flex flex-col w-full">
@@ -26,6 +42,7 @@ const Watchpage = () => {
                         referrerPolicy="strict-origin-when-cross-origin"
                         allowFullScreen
                     ></iframe>
+
                 </div>
                 <div className="flex w-full lg:w-[30%] lg:ml-5 mt-5 lg:mt-0">
                     <LiveChat />
