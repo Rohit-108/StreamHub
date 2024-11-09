@@ -7,7 +7,7 @@ const Comment = ({ data }) => {
     const { authorDisplayName, textDisplay, authorProfileImageUrl, likeCount, updatedAt } = data.snippet.topLevelComment.snippet;
 
     return (
-        <div className="flex shadow-sm bg-gray-100 p-2 my-2 rounded-lg">
+        <div className="flex   p-2 my-2 lg:w-[70%]  ">
             <img className="w-12 h-12 rounded-full" alt="user" src={authorProfileImageUrl} />
             <div className="px-3">
                 <div className="flex gap-x-2">
@@ -28,7 +28,7 @@ const CommentsList = ({ comments }) => {
                 <div key={index}>
                     <Comment data={comment} />
                     {comment.replies && comment.replies.length > 0 && (
-                        <div className="pl-5 ml-5 border-l-2 border-gray-300">
+                        <div className="pl-5 ml-5 gap-y-2 lg:w-[70%] ">
                             <CommentsList comments={comment.replies} />
                         </div>
                     )}
@@ -61,6 +61,7 @@ const CommentSection = () => {
 
     return (
         <div className="m-5 p-2">
+
             <h1 className="text-2xl font-bold">Comments:</h1>
             {commentData.length > 0 ? (
                 <CommentsList comments={commentData} />
