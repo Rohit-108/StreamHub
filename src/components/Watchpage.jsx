@@ -6,28 +6,33 @@ import CommentSection from "./CommentSection";
 import LiveChat from "./LiveChat";
 import { YOUTUBE_VIDEO_DETAIL_API } from "./utills/constant";
 
-const Watchpage = () => {
-    const [videoData, setVideoData] = useState([])
+const Watchpage = ({ info }) => {
+    const [videoData, setVideoData] = useState(null);
     const [searchParams] = useSearchParams();
     const dispatch = useDispatch();
     const videoId = searchParams.get("v");
-
+    const { snippet, statistics } = info || {};
+    const { channelTitle, title, thumbnails, publishedAt } = snippet || {};
 
     useEffect(() => {
         dispatch(closeMenu());
     }, [dispatch]);
 
-
     useEffect(() => {
-        videoDetails()
-    }, [])
+        if (videoId) {
+            videoDetails();
+        }
+    }, [videoId]);
 
     const videoDetails = async () => {
-        const response = await fetch(`${YOUTUBE_VIDEO_DETAIL_API}${videoId}`);
-        const json = await response.json();
-        console.log(json)
-        setVideoData(json.items[0])
-    }
+        try {
+            const response = await fetch(`${YOUTUBE_VIDEO_DETAIL_API}${videoId}`);
+            const json = await response.json();
+            setVideoData(json.items[0]);
+        } catch (error) {
+            console.error("Failed to fetch video details:", error);
+        }
+    };
 
     return (
         <div className="flex flex-col w-full">
@@ -35,19 +40,19 @@ const Watchpage = () => {
                 <div className="w-full lg:w-[70%]">
                     <iframe
                         className="w-full h-[250px] sm:h-[350px] lg:h-[500px]"
-                        src={"https://www.youtube.com/embed/" + searchParams.get("v")}
+                        src={`https://www.youtube.com/embed/${videoId}`}
                         title="YouTube video player"
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerPolicy="strict-origin-when-cross-origin"
                         allowFullScreen
                     ></iframe>
-
                 </div>
                 <div className="flex w-full lg:w-[30%] lg:ml-5 mt-5 lg:mt-0">
                     <LiveChat />
                 </div>
             </div>
+            <div>{videoData?.snippet?.title || "Loading video title..."}</div>
             <div className="mt-5">
                 <CommentSection />
             </div>
