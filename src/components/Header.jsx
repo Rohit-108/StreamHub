@@ -14,34 +14,28 @@ const Header = () => {
     const dispatch = useDispatch();
     const searchCache = useSelector((store) => store.search);
 
+
+    const getSearchSuggestions = async () => {
+        const response = await fetch(`${YOUTUBE_SEARCH_API}${searchQuery}`);
+        const json = await response.json();
+        setSuggestions(json[1]);
+
+        dispatch(cacheResults({ [searchQuery]: json[1] }));
+    }
+
     useEffect(() => {
         const timer = setTimeout(() => {
-            if (searchQuery) {
-                if (searchCache[searchQuery]) {
-                    setSuggestions(searchCache[searchQuery]);
-                } else {
-                    getSearchSuggestions();
-                }
+            if (searchCache[searchQuery]) {
+                setSuggestions(searchCache[searchQuery]);
             } else {
-                setSuggestions([]); // Clear suggestions if input is empty
+                getSearchSuggestions();
             }
         }, 200);
+
         return () => clearTimeout(timer);
     }, [searchQuery]);
 
-    const getSearchSuggestions = async () => {
-        try {
-            const response = await fetch(`${YOUTUBE_SEARCH_API}${searchQuery}`);
-            if (!response.ok) throw new Error("Network response was not ok");
-            const json = await response.json();
-            setSuggestions(json[1]); // Assuming json[1] contains the suggestions
 
-            dispatch(cacheResults({ [searchQuery]: json[1] }));
-        } catch (error) {
-            console.error("Error fetching search suggestions:", error);
-            setSuggestions([]); // Clear suggestions on error
-        }
-    };
 
     const toggleHandler = () => {
         dispatch(toggleMenu());
@@ -67,9 +61,9 @@ const Header = () => {
             <div className="col-span-10 flex items-center px-10">
                 <div className="flex flex-grow relative">
                     <input
-                        type="text"
-                        aria-label="Search"
                         className="h-10 w-full border border-gray-400 p-2 rounded-l-full px-3"
+                        type="text"
+                        placeholder="Search "
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onFocus={() => setShowSuggestions(true)}

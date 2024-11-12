@@ -1,9 +1,11 @@
 /* eslint-disable react/prop-types */
-const VideoCard = ({ info }) => {
+const VideoCard = ({ info, channelinfo }) => {
 
 
     const { snippet, statistics } = info;
     const { channelTitle, title, thumbnails, publishedAt } = snippet;
+    const { viewCount } = statistics;
+
 
 
     // Function to format the published date
@@ -27,18 +29,41 @@ const VideoCard = ({ info }) => {
         }
     };
 
+    const countToDisplaycount = (viewCount) => {
+        if (viewCount >= 1000 && viewCount <= 999999) {
+            let value = viewCount / 1000;
+            let out = value.toFixed(1);
+            return out + "k";
+        }
+        else if (viewCount >= 1000000 && viewCount <= 999999999) {
+            let value = viewCount / 1000000;
+            let out = value.toFixed(1);
+            return out + "M";
+        }
+        else if (viewCount >= 1000000000) {
+            let value = viewCount / 1000000000;
+            let out = value.toFixed(1);
+            return out + "B";
+        }
+        else {
+            return viewCount
+        }
+    }
+
 
     return (
         <>
-            <div className="p-2 m-2 w-72 shadow-lg ">
-                <img className="rounded-lg" alt="Videos" src={thumbnails.medium.url} />
+            <div className="p-2 m-2 cursor-pointer  rounded-lg w-[400px] md:w-[300px]">
+                <img className="w-[350px] md:w-[300px] rounded-lg hover:rounded-none" alt="img" src={thumbnails.medium.url} />
                 <ul>
-                    <li className="font-bold py-2">{title}</li>
-                    <li className="">{channelTitle}</li>
+                    <img alt="Channel Thumbnail" className="rounded-full w-[40px] h-[40px]" src={channelinfo?.snippet?.thumbnails?.default?.url} />
+
+                    <li className="font-bold  truncate-2-lines">{title}</li>
+                    <li className="text-gray-600">{channelTitle}</li>
                     <div className="flex items-center gap-x-1">
-                        <li>{(statistics.viewCount / 1000000).toFixed(2)}M views</li>
-                        <li className="pb-2  text-xl font-bold ">.</li>
-                        <li>{formatPublishedDate(publishedAt)}</li>
+                        <li className='text-gray-600'>{countToDisplaycount(viewCount)} views</li>
+                        <li className="pb-2  text-xl font-bold text-gray-600 ">.</li>
+                        <li className="text-gray-600">{formatPublishedDate(publishedAt)}</li>
                     </div>
 
                 </ul>

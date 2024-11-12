@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { YOUTUBE_VIDEOS_API } from "./utills/constant";
 import VideoCard from "./VideoCard";
 import { Link } from "react-router-dom";
+import Shimmer from "./Shimmer";
 
-const VideoContainer = () => {
+const VideoContainer = ({ video }) => {
     const [videos, setVideos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -22,14 +23,14 @@ const VideoContainer = () => {
             console.log(json);
             setVideos(json.items);
         } catch (error) {
-            setError(error.message);
+            setError(error.message)
         } finally {
             setLoading(false);
         }
     };
 
     if (loading) {
-        return <div className="text-center p-4">Loading videos...</div>;
+        return <div className="text-center p-4"><Shimmer /></div>;
     }
 
     if (error) {
@@ -37,10 +38,10 @@ const VideoContainer = () => {
     }
 
     return (
-        <div className="flex flex-wrap justify-center">
+        <div className="flex flex-wrap w-12/12 m-2  md:ml-[90px] ml-[45px] ">
             {videos.map((video) => (
                 <Link key={video.id} to={"/watch?v=" + video.id} className="m-2">
-                    <VideoCard info={video} />
+                    <VideoCard info={video} channelinfo={video.channelInfo} />
                 </Link>
             ))}
         </div>
