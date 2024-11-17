@@ -89,8 +89,11 @@ const Header = () => {
                     </div>
                 )}
             </div>
-            <div className="col-span-1">
-                <FaUserCircle className="h-7 w-7" />
+            <div className="flex items-center border border-1 rounded-full px-1.5 py-1.5 gap-x-2 text-blue-600 text-sm">
+                <FaUserCircle className="h-5 w-5" />
+
+                <p className="flex items-center pb-0.5 font-medium">Sign in</p>
+
             </div>
         </div>
     );

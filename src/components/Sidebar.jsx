@@ -17,7 +17,7 @@ const Sidebar = () => {
 
             <ul className="w-[300px] pl-12">
                 <Link to="/" >
-                    <div className="flex justify-around px-2  h-5 w-16 x-2 mb-4 text-lg hover:bg-gray-300 hover:font-300 cursor-pointer "><MdHome className="h-5 w-5" />
+                    <div className="flex justify-around px-2  h-5 w-16  mb-4 text-lg hover:bg-gray-300 hover:font-300 cursor-pointer "><MdHome className="h-9 w-9" />
                         <li >Home </li>
                     </div></Link>
                 <li className="h-5 w-12 gap-y-5 text-lg hover:bg-gray-300 cursor-pointer">Shorts</li>
