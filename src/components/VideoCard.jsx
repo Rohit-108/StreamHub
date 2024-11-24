@@ -53,17 +53,20 @@ const VideoCard = ({ info, channelinfo }) => {
 
     return (
         <>
-            <div className="p-2 m-2 cursor-pointer  rounded-lg w-[400px] md:w-[300px]">
-                <img className="w-[350px] md:w-[300px] rounded-lg hover:rounded-none" alt="img" src={thumbnails.medium.url} />
-                <ul>
-                    <img alt="Channel Thumbnail" className="rounded-full w-[40px] h-[40px]" src={channelinfo?.snippet?.thumbnails?.default?.url} />
-
-                    <li className="font-bold  truncate-2-lines">{title}</li>
-                    <li className="text-gray-600">{channelTitle}</li>
-                    <div className="flex items-center gap-x-1">
-                        <li className='text-gray-600'>{countToDisplaycount(viewCount)} views</li>
-                        <li className="pb-2  text-xl font-bold text-gray-600 ">.</li>
-                        <li className="text-gray-600">{formatPublishedDate(publishedAt)}</li>
+            <div className="p-2 m-1 cursor-pointer  rounded-lg w-[500px] md:w-[400px]">
+                <img className="w-[400px] h-[225px] rounded-lg hover:rounded-none" alt="img" src={thumbnails.medium.url} />
+                <ul className="w-[400px] h-25 flex pt-0">
+                    <div className="flex items-center">
+                        <img alt="Channel Thumbnail" className="w-12 h-12 rounded-full" src={channelinfo?.snippet?.thumbnails?.default?.url} />
+                    </div>
+                    <div className="w-[352px] mx-2 pt-0">
+                        <li className="mt-4 text-gray-800 text-sm font-semibold leading-snug ">{title}</li>
+                        <li className="text-gray-600">{channelTitle}</li>
+                        <div className="flex items-center space-x-1 text-gray-500 text-xm">
+                            <li className="text-gray-600">{countToDisplaycount(viewCount)} views</li>
+                            <li className="text-gray-600">.</li>
+                            <li className="text-gray-600">{formatPublishedDate(publishedAt)}</li>
+                        </div>
                     </div>
 
                 </ul>

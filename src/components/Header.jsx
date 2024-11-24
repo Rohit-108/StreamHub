@@ -47,7 +47,7 @@ const Header = () => {
     };
 
     return (
-        <div className="grid grid-flow-col p-3 mx-2 shadow-lg items-center relative">
+        <div className="grid grid-flow-col p-1 pl-4 shadow-lg items-center relative">
             <div className="flex col-span-1">
                 <div className="flex items-center cursor-pointer" onClick={toggleHandler}>
                     <RxHamburgerMenu className="h-7 w-7" />
@@ -58,7 +58,7 @@ const Header = () => {
                     alt="YouTube"
                 />
             </div>
-            <div className="col-span-10 flex items-center px-10">
+            <div className="h-[40px] w-[730px] flex ml-24 ">
                 <div className="flex flex-grow relative">
                     <input
                         className="h-10 w-full border border-gray-400 p-2 rounded-l-full px-3"
@@ -89,9 +89,8 @@ const Header = () => {
                     </div>
                 )}
             </div>
-            <div className="flex items-center border border-1 rounded-full px-1.5 py-1.5 gap-x-2 text-blue-600 text-sm">
+            <div className="w-[100px] ml-28 flex items-center justify-center border border-1 rounded-full px-1.5 py-1.5 gap-x-2 text-blue-600 text-sm">
                 <FaUserCircle className="h-5 w-5" />
-
                 <p className="flex items-center pb-0.5 font-medium">Sign in</p>
 
             </div>

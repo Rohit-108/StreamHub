@@ -16,7 +16,7 @@ const Sidebar = () => {
 
 
     return (
-        <div className="p-3 shadow-lg w-[230px] ">
+        <div className=" sticky top-0 p-3 shadow-lg w-[230px] ">
 
             <ul className="w-[200px] ">
                 <Link to="/"  >
@@ -38,18 +38,18 @@ const Sidebar = () => {
 
             </ul>
             <h1 className="font-bold pt-5">Subscriptions</h1>
-            <ul className="w-[300px] ">
+            <ul className="w-[200px] ">
+                <Link to="/"  >
+                    <div className="flex hover:bg-gray-200 hover:rounded-xl items-center py-1.5 "><MdLocalMovies className="h-8 w-8 pl-2" />
+                        <li className="ml-5 text-lg " >Trending </li>
+                    </div></Link>
+                <Link to="/"  >
+                    <div className="flex hover:bg-gray-200 hover:rounded-xl items-center py-1.5 "><MdLocalMovies className="h-8 w-8 pl-2" />
+                        <li className="ml-5 text-lg " >Shoping </li>
+                    </div></Link>
                 <Link to="/"  >
                     <div className="flex hover:bg-gray-200 hover:rounded-xl items-center py-1.5 "><IoMusicalNotes className="h-8 w-8 pl-2" />
                         <li className="ml-5 text-lg " >Music </li>
-                    </div></Link>
-                <Link to="/"  >
-                    <div className="flex hover:bg-gray-200 hover:rounded-xl items-center py-1.5 "><AiFillTrophy className="h-8 w-8 pl-2" />
-                        <li className="ml-5 text-lg " >Sports </li>
-                    </div></Link>
-                <Link to="/"  >
-                    <div className="flex hover:bg-gray-200 hover:rounded-xl items-center py-1.5 "><SiYoutubegaming className="h-8 w-8 pl-2" />
-                        <li className="ml-5 text-lg " >Gaming </li>
                     </div></Link>
                 <Link to="/"  >
                     <div className="flex hover:bg-gray-200 hover:rounded-xl items-center py-1.5 "><MdLocalMovies className="h-8 w-8 pl-2" />
@@ -58,11 +58,29 @@ const Sidebar = () => {
 
             </ul>
             <h1 className="font-bold pt-5">Watch Later</h1>
-            <ul className="w-[300px] pl-12">
-                <li className="h-5 w-12 gap-y-5 text-lg hover:bg-gray-300 cursor-pointer">Music</li>
-                <li className="h-5 w-12 gap-y-5 text-lg hover:bg-gray-300 cursor-pointer">Sports</li>
-                <li className="h-5 w-12 gap-y-5 text-lg hover:bg-gray-300 cursor-pointer">Gaming</li>
-                <li className="h-5 w-12 gap-y-5 text-lg hover:bg-gray-300 cursor-pointer">Movies</li>
+            <ul className="w-[200px]">
+                <Link to="/"  >
+                    <div className="flex hover:bg-gray-200 hover:rounded-xl items-center py-1.5 "><MdLocalMovies className="h-8 w-8 pl-2" />
+                        <li className="ml-5 text-lg " >Live </li>
+                    </div></Link>
+
+                <Link to="/"  >
+                    <div className="flex hover:bg-gray-200 hover:rounded-xl items-center py-1.5 "><SiYoutubegaming className="h-8 w-8 pl-2" />
+                        <li className="ml-5 text-lg " >Gaming </li>
+                    </div></Link>
+                <Link to="/"  >
+                    <div className="flex hover:bg-gray-200 hover:rounded-xl items-center py-1.5 "><MdLocalMovies className="h-8 w-8 pl-2" />
+                        <li className="ml-5 text-lg " >News </li>
+                    </div></Link>
+                <Link to="/"  >
+                    <div className="flex hover:bg-gray-200 hover:rounded-xl items-center py-1.5 "><AiFillTrophy className="h-8 w-8 pl-2" />
+                        <li className="ml-5 text-lg " >Sports </li>
+                    </div></Link>
+                <Link to="/"  >
+                    <div className="flex hover:bg-gray-200 hover:rounded-xl items-center py-1.5 "><MdLocalMovies className="h-8 w-8 pl-2" />
+                        <li className="ml-5 text-lg " >Courses </li>
+                    </div></Link>
+
 
             </ul>
         </div>
