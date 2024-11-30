@@ -2,6 +2,8 @@ import { YOUTUBE_COMMENT_API, GOOGLE_API_KEY } from "./utills/constant";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { formatPublishedDate } from "./utills/constant";
+import { AiTwotoneLike } from "react-icons/ai";
+import { AiTwotoneDislike } from "react-icons/ai";
 
 const Comment = ({ data }) => {
     const { authorDisplayName, textDisplay, authorProfileImageUrl, likeCount, updatedAt } = data.snippet.topLevelComment.snippet;
@@ -14,8 +16,16 @@ const Comment = ({ data }) => {
                     <p className="font-bold">{authorDisplayName}</p>
                     <p>{formatPublishedDate(updatedAt)}</p>
                 </div>
-                <p>{textDisplay}</p>
-                <p className="text-gray-600">{likeCount} Likes</p>
+                <p>{textDisplay ? textDisplay : 'This comment is not available!'}</p>
+                <div className="flex items-center gap-x-4">
+                    <p className="text-gray-600 flex items-center gap-y-2 font-semibold">
+                        <AiTwotoneLike className="inline-block" />
+                    </p>
+                    <p>{likeCount} </p>
+                    <p className="text-gray-600 flex items-center gap-y-2 font-semibold">
+                        <AiTwotoneDislike className="inline-block" /></p>
+                </div>
+
             </div>
         </div>
     );

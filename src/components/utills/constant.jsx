@@ -31,3 +31,21 @@ export const formatPublishedDate = (dateString) => {
         return `${Math.floor(secondsDiff / 31536000)} years ago`;
     }
 };
+
+export const formatNumber = (number) => {
+    if (number >= 1_000_000_000) {
+        return (number / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
+    }
+    if (number >= 1_000_000) {
+        return (number / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+    }
+    if (number >= 1_000) {
+        return (number / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
+    }
+    return number; // Return as-is if less than 1000
+}
+
+export const NumberFormatter = (number) => {
+    const newNumber = Number(number)
+    return newNumber.toLocaleString('en-US');
+}

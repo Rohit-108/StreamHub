@@ -57,7 +57,7 @@ const VideoCard = ({ info, channelinfo }) => {
                 <img className="w-[400px] h-[225px] rounded-lg hover:rounded-none" alt="img" src={thumbnails.medium.url} />
                 <ul className="w-[400px] h-25 flex pt-0">
                     <div className="flex items-center">
-                        <img alt="Channel Thumbnail" className="w-12 h-12 rounded-full" src={thumbnails?.default?.url} />
+                        <img alt="Channel Thumbnail" className="w-12 h-12 rounded-full" src={snippet.thumbnails.medium.url} />
                     </div>
                     <div className="w-[352px] mx-2 pt-0">
                         <li className="mt-4 text-gray-800 text-sm font-semibold leading-snug ">{title}</li>
