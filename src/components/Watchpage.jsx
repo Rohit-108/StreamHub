@@ -3,9 +3,9 @@ import { useDispatch } from "react-redux";
 import { closeMenu } from "./utills/appSlice";
 import { useSearchParams } from "react-router-dom";
 import CommentSection from "./CommentSection";
-import LiveChat from "./LiveChat";
 import { formatNumber, formatPublishedDate, NumberFormatter } from "./utills/constant"
 import { YOUTUBE_VIDEO_DETAIL_API } from "./utills/constant";
+import SuggestionCard from "./SuggestionCard";
 
 const Watchpage = () => {
     const [videoData, setVideoData] = useState(null);
@@ -78,35 +78,35 @@ const Watchpage = () => {
                     ></iframe>
                 </div>
                 <div className="flex w-full lg:w-[30%] lg:ml-5 mt-5 lg:mt-0">
-                    <LiveChat />
+                    <SuggestionCard info={videoData} channelinfo={videoData?.channelInfo} />
                 </div>
             </div>
             {videoData && (
                 <div className="mt-4 px-5 w-full lg:w-[70%]  ">
                     <h1 className="font-bold text-xl">{videoData.snippet.title}</h1>
-                    <div className="gap-y-10">
-                        <div className="gap-y-2.5">
-                            <img className="w-12 h-12 rounded-full" alt="user" src={videoData && videoData.snippet.thumbnails.medium.url} />
-                            <div>
-                                <p className="font-bold mt-1">{videoData.snippet.channelTitle}</p>
-                                <p className="text-[#444] text-[16px]">{videoData ? `${formatNumber(videoData.statistics.subscriberCount)} subscribers` : 'unavailable'}</p>
+                    <div className="flex items-center justify-between">
+                        <div className="gap-y-10 flex items-center justify-between">
+                            <div className="gap-y-2.5 gap-x-5 flex items-center justify-between">
+                                <img className="w-12 h-12 rounded-full" alt="user" src={videoData && videoData.snippet.thumbnails.medium.url} />
+                                <div className="mx-5">
+                                    <p className="font-bold mt-1">{videoData.snippet.channelTitle}</p>
+                                    <p className="text-[#444] text-[16px]">{videoData ? `${formatNumber(videoData.statistics.subscriberCount)} subscribers` : 'unavailable'}</p>
+                                </div>
                             </div>
+                            <button className="text-white font-500 py-2 px-4 bg-[#151515] rounded-3xl">Subscribe</button>
                         </div>
-                        <button className="text-white font-500 py-2 px-4 bg-[#151515] rounded-3xl">Subscribe</button>
-                    </div>
-                    <div className="gap-y-3">
-                        <div id="like-dislike">
-                            <button><i className='bx bx-like'></i>{videoData ? formatNumber(videoData.statistics.likeCount) : 'unavailable'}</button>
-                            <button><i className='bx bx-dislike'></i></button>
+                        <div className="gap-y-3 gap-x-3  flex items-center justify-between">
+                            <div className="flex flex-nowrap py-2.5 px-3.5 border border-none">
+                                <button className="bg-[#0000000d]"><i className='mr-1 scale-1 rounded-l-2xl rounded-bl-2xl
+                                border border-r-gray-[#999999] bx-like'></i>{videoData ? formatNumber(videoData.statistics.likeCount) : 'unavailable'}</button>
+                                <button className="bg-[#0000000d]"><i className='mr-1 scale-1  bx-dislike'></i></button>
+                            </div>
+                            <button className='flex flex-nowrap py-1.5 px-2.5 border border-none rounded-2xl bg-[#0000000d] items-center'><i className='mr-1 scale-1  bx-share'></i>Share</button>
+                            <button className='flex flex-nowrap py-1.5 px-2.5 border border-none rounded-2xl bg-[#0000000d] items-center'><i className='mr-1 scale-1 bx-down-arrow-alt'></i>Download</button>
+                            <button className='flex flex-nowrap py-1.5 px-2.5 border border-none rounded-2xl bg-[#0000000d] items-center'><i className='mr-1 scale-1  bx-dots-horizontal-rounded'></i></button>
                         </div>
-                        <button className='analy-btn'><i className='bx bx-share'></i>Share</button>
-                        <button className='analy-btn'><i className='bx bx-down-arrow-alt'></i>Download</button>
-                        <button className='analy-btn'><i className='bx bx-dots-horizontal-rounded'></i></button>
                     </div>
 
-
-
-                    <p>{(videoData.statistics.viewCount / 1000000).toFixed(2)}M views</p>
                     <div className="width-[100%] my-3 mx-0 p-3 bg-[#0000000d] rounded-xl cursor-pointer">
                         <div className="text-md font-bold mb-5">
                             {videoData && `${formatNumber(videoData.statistics.viewCount)} views  ${formatPublishedDate(videoData.snippet.publishedAt)}`}
