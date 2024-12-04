@@ -8,10 +8,22 @@ const VideoContainer = ({ video }) => {
     const [videos, setVideos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [page, setPage] = useState(1)
 
     useEffect(() => {
         getVideos();
-    }, []);
+    }, [page]);
+
+    useEffect(() => {
+        window.addEventListener("scroll", handleInfiniteScroll);
+        return () => window.removeEventListener("scroll", handleInfiniteScroll)
+    }, [])
+
+    const handleInfiniteScroll = async () => {
+        if (window.innerHeight + document.ducumentElement.ScrollTop + 1 >= document.documentElement.scrollHeight) {
+            setPage((prev) => prev + 1)
+        }
+    }
 
     const getVideos = async () => {
         try {
@@ -21,7 +33,7 @@ const VideoContainer = ({ video }) => {
             }
             const json = await response.json();
             console.log(json);
-            setVideos(json.items);
+            setVideos((prev) => [...prev, ...json.items]);
         } catch (error) {
             setError(error.message)
         } finally {
@@ -36,6 +48,7 @@ const VideoContainer = ({ video }) => {
     if (error) {
         return <div className="text-center p-4 text-red-600">Error: {error}</div>;
     }
+
 
     return (
         <div className="flex flex-wrap ">
