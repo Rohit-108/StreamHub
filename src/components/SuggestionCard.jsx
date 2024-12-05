@@ -1,4 +1,4 @@
-const SuggestionCard = ({ info, channelinfo }) => {
+const SuggestionCard = ({ info }) => {
 
 
     const { snippet, statistics } = info;

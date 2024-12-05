@@ -78,7 +78,7 @@ const Watchpage = () => {
                     ></iframe>
                 </div>
                 <div className="flex w-full lg:w-[30%] lg:ml-5 mt-5 lg:mt-0">
-                    <SuggestionCard info={videoData} channelinfo={videoData?.channelInfo} />
+                    <SuggestionCard info={videoData.info} />
                 </div>
             </div>
             {videoData && (
