@@ -4,7 +4,7 @@ import { closeMenu } from "./utills/appSlice";
 import { useSearchParams } from "react-router-dom";
 import CommentSection from "./CommentSection";
 import { formatNumber, formatPublishedDate, NumberFormatter } from "./utills/constant"
-import { YOUTUBE_VIDEO_DETAIL_API } from "./utills/constant";
+import { YOUTUBE_VIDEO_DETAIL_API, YOUTUBE_RELATED_VIDEOS_API, GOOGLE_API_KEY } from "./utills/constant";
 import SuggestionCard from "./SuggestionCard";
 
 const Watchpage = () => {
@@ -13,6 +13,7 @@ const Watchpage = () => {
     const dispatch = useDispatch();
     const videoId = searchParams.get("v");
     const [expanded, setExpanded] = useState(true);
+    const [suggestions, setSuggestions] = useState([])
 
 
     useEffect(() => {
@@ -22,6 +23,7 @@ const Watchpage = () => {
     useEffect(() => {
         if (videoId) {
             videoDetails();
+            fetchSuggestions();
         }
     }, [videoId]);
 
@@ -36,6 +38,17 @@ const Watchpage = () => {
             console.error("Failed to fetch video details:", error);
         }
     };
+
+    const fetchSuggestions = async () => {
+        try {
+            const result = await fetch(`${YOUTUBE_RELATED_VIDEOS_API}&id=${videoId}&key=${GOOGLE_API_KEY}`)
+            const json = await result.json();
+            setSuggestions(json.items)
+        }
+        catch (error) {
+            console.error("Failed to fetch suggestions:", error);
+        }
+    }
 
     const shortDescription = (text) => {
         if (text.length > 600) {
@@ -78,7 +91,9 @@ const Watchpage = () => {
                     ></iframe>
                 </div>
                 <div className="flex w-full lg:w-[30%] lg:ml-5 mt-5 lg:mt-0">
-                    <SuggestionCard info={videoData.info} />
+                    {videoData?.suggestions?.map((suggestion) => (
+                        <SuggestionCard key={suggestion.id} info={suggestion} />
+                    ))}
                 </div>
             </div>
             {videoData && (

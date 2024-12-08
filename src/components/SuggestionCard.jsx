@@ -56,7 +56,7 @@ const SuggestionCard = ({ info }) => {
                 <div className="flex flex-col justify-between">
                     <img alt="Channel Thumbnail" className="w-12 h-12 rounded-full" src={snippet.thumbnails.medium.url} />
                 </div>
-                <div className="flex flex-col justify-between">
+                <div className="flex flex-zcol justify-between">
                     <li className="text-black text-sm leading-5 font-medium mb-1 ">{title.length > 80 ? title.slice(0, 81) + '...' : title}</li>
                     <li className="text-sm text-gray-600">{channelTitle}</li>
                     <div className="flex items-center space-x-1 text-gray-500 text-xm">
