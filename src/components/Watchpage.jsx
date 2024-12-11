@@ -4,8 +4,9 @@ import { closeMenu } from "./utills/appSlice";
 import { useSearchParams } from "react-router-dom";
 import CommentSection from "./CommentSection";
 import { formatNumber, formatPublishedDate, NumberFormatter } from "./utills/constant"
-import { YOUTUBE_VIDEO_DETAIL_API, YOUTUBE_RELATED_VIDEOS_API, GOOGLE_API_KEY } from "./utills/constant";
+import { YOUTUBE_VIDEO_DETAIL_API, GOOGLE_API_KEY } from "./utills/constant";
 import SuggestionCard from "./SuggestionCard";
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const Watchpage = () => {
     const [videoData, setVideoData] = useState(null);
@@ -13,8 +14,13 @@ const Watchpage = () => {
     const dispatch = useDispatch();
     const videoId = searchParams.get("v");
     const [expanded, setExpanded] = useState(true);
-    const [suggestions, setSuggestions] = useState([])
+    const [suggestionData, setSuggestionData] = useState([]);
+    const [totalSuggestionResults, setTotalSuggestionResults] = useState(0);
+    const [suggestionPageToken, setSuggestionPageToken] = useState(null);
 
+    useEffect(() => {
+        fetchSuggestion();
+    }, [videoData]);
 
     useEffect(() => {
         dispatch(closeMenu());
@@ -23,7 +29,6 @@ const Watchpage = () => {
     useEffect(() => {
         if (videoId) {
             videoDetails();
-            fetchSuggestions();
         }
     }, [videoId]);
 
@@ -31,24 +36,33 @@ const Watchpage = () => {
         try {
             const response = await fetch(`${YOUTUBE_VIDEO_DETAIL_API}${videoId}`);
             const json = await response.json();
-            console.log(json)
-
             setVideoData(json.items[0]);
         } catch (error) {
             console.error("Failed to fetch video details:", error);
         }
     };
 
-    const fetchSuggestions = async () => {
-        try {
-            const result = await fetch(`${YOUTUBE_RELATED_VIDEOS_API}&id=${videoId}&key=${GOOGLE_API_KEY}`)
-            const json = await result.json();
-            setSuggestions(json.items)
-        }
-        catch (error) {
-            console.error("Failed to fetch suggestions:", error);
-        }
-    }
+    const fetchSuggestion = async () => {
+        const suggestion_response = await fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=15&regionCode=IN&videoCategoryId=${videoData.snippet.categoryId}&key=${GOOGLE_API_KEY}`);
+        const suggestion_data = await suggestion_response.json();
+
+        setTotalSuggestionResults(suggestion_data.pageInfo.totalResults);
+        setSuggestionPageToken(suggestion_data.nextPageToken);
+        setSuggestionData(suggestion_data.items);
+    };
+
+    const fetchMoreSuggestions = async () => {
+        const response = await fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&pageToken=${suggestionPageToken}&maxResults=15&regionCode=IN&videoCategoryId=${videoData.snippet.categoryId}&key=${GOOGLE_API_KEY}`);
+        const data = await response.json();
+
+        setSuggestionPageToken(data.nextPageToken);
+        setSuggestionData((prevSuggestionData) => prevSuggestionData.concat(data.items));
+    };
+
+
+
+
+
 
     const shortDescription = (text) => {
         if (text.length > 600) {
@@ -77,9 +91,9 @@ const Watchpage = () => {
     }
 
     return (
-        <div className="flex flex-col w-full">
-            <div className="px-5 mt-2 flex flex-col lg:flex-row w-full ">
-                <div className="w-full lg:w-[70%] ">
+        <div className="flex w-full mx-20">
+            <div className="px-5 mt-2  w-full lg:w-[70%]  ">
+                <div className="w-full px-4 lg:px-6 mt-4">
                     <iframe
                         className="w-full h-[250px] sm:h-[350px] lg:h-[500px] rounded-xl"
                         src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
@@ -89,55 +103,75 @@ const Watchpage = () => {
                         referrerPolicy="strict-origin-when-cross-origin"
                         allowFullScreen
                     ></iframe>
-                </div>
-                <div className="flex w-full lg:w-[30%] lg:ml-5 mt-5 lg:mt-0">
-                    {videoData?.suggestions?.map((suggestion) => (
-                        <SuggestionCard key={suggestion.id} info={suggestion} />
-                    ))}
-                </div>
-            </div>
-            {videoData && (
-                <div className="mt-4 px-5 w-full lg:w-[70%]  ">
-                    <h1 className="font-bold text-xl">{videoData.snippet.title}</h1>
-                    <div className="flex items-center justify-between">
-                        <div className="gap-y-10 flex items-center justify-between">
-                            <div className="gap-y-2.5 gap-x-5 flex items-center justify-between">
-                                <img className="w-12 h-12 rounded-full" alt="user" src={videoData && videoData.snippet.thumbnails.medium.url} />
-                                <div className="mx-5">
-                                    <p className="font-bold mt-1">{videoData.snippet.channelTitle}</p>
-                                    <p className="text-[#444] text-[16px]">{videoData ? `${formatNumber(videoData.statistics.subscriberCount)} subscribers` : 'unavailable'}</p>
+                    {videoData && (
+                        <div className=" w-full   ">
+                            <h1 className="font-bold text-xl">{videoData.snippet.title}</h1>
+                            <div className="flex items-center justify-between">
+                                <div className="gap-y-10 flex items-center justify-between">
+                                    <div className="gap-y-2.5 gap-x-5 flex items-center justify-between">
+                                        <img className="w-12 h-12 rounded-full" alt="user" src={videoData && videoData.snippet.thumbnails.medium.url} />
+                                        <div className="mx-5">
+                                            <p className="font-bold mt-1">{videoData.snippet.channelTitle}</p>
+                                            <p className="text-[#444] text-[16px]">{videoData ? `${formatNumber(videoData.statistics.subscriberCount)} subscribers` : 'unavailable'}</p>
+                                        </div>
+                                    </div>
+                                    <button className="text-white font-500 py-2 px-4 bg-[#151515] rounded-3xl">Subscribe</button>
+                                </div>
+                                <div className="gap-y-3 gap-x-3  flex items-center justify-between">
+                                    <div className="flex flex-nowrap py-2.5 px-3.5 border border-none">
+                                        <button className="bg-[#0000000d]"><i className='mr-1 scale-1 rounded-l-2xl rounded-bl-2xl
+                                border border-r-gray-[#999999] bx-like'></i>{videoData ? formatNumber(videoData.statistics.likeCount) : 'unavailable'}</button>
+                                        <button className="bg-[#0000000d]"><i className='mr-1 scale-1  bx-dislike'></i></button>
+                                    </div>
+                                    <button className='flex flex-nowrap py-1.5 px-2.5 border border-none rounded-2xl bg-[#0000000d] items-center'><i className='mr-1 scale-1  bx-share'></i>Share</button>
+                                    <button className='flex flex-nowrap py-1.5 px-2.5 border border-none rounded-2xl bg-[#0000000d] items-center'><i className='mr-1 scale-1 bx-down-arrow-alt'></i>Download</button>
+                                    <button className='flex flex-nowrap py-1.5 px-2.5 border border-none rounded-2xl bg-[#0000000d] items-center'><i className='mr-1 scale-1  bx-dots-horizontal-rounded'></i></button>
                                 </div>
                             </div>
-                            <button className="text-white font-500 py-2 px-4 bg-[#151515] rounded-3xl">Subscribe</button>
-                        </div>
-                        <div className="gap-y-3 gap-x-3  flex items-center justify-between">
-                            <div className="flex flex-nowrap py-2.5 px-3.5 border border-none">
-                                <button className="bg-[#0000000d]"><i className='mr-1 scale-1 rounded-l-2xl rounded-bl-2xl
-                                border border-r-gray-[#999999] bx-like'></i>{videoData ? formatNumber(videoData.statistics.likeCount) : 'unavailable'}</button>
-                                <button className="bg-[#0000000d]"><i className='mr-1 scale-1  bx-dislike'></i></button>
+
+                            <div className="width-[100%] my-3 mx-0 p-3 bg-[#0000000d] rounded-xl cursor-pointer">
+                                <div className="text-md font-bold mb-5">
+                                    {videoData && `${formatNumber(videoData.statistics.viewCount)} views  ${formatPublishedDate(videoData.snippet.publishedAt)}`}
+                                </div>
+                                <pre className="h-20 text-400 font-400 contain-content overflow-visible whitespace-pre-wrap" onClick={toggleDescription}>
+                                    {videoData ? shortDescription(videoData.snippet.description) : 'Description is not available'}
+                                </pre>
                             </div>
-                            <button className='flex flex-nowrap py-1.5 px-2.5 border border-none rounded-2xl bg-[#0000000d] items-center'><i className='mr-1 scale-1  bx-share'></i>Share</button>
-                            <button className='flex flex-nowrap py-1.5 px-2.5 border border-none rounded-2xl bg-[#0000000d] items-center'><i className='mr-1 scale-1 bx-down-arrow-alt'></i>Download</button>
-                            <button className='flex flex-nowrap py-1.5 px-2.5 border border-none rounded-2xl bg-[#0000000d] items-center'><i className='mr-1 scale-1  bx-dots-horizontal-rounded'></i></button>
-                        </div>
-                    </div>
 
-                    <div className="width-[100%] my-3 mx-0 p-3 bg-[#0000000d] rounded-xl cursor-pointer">
-                        <div className="text-md font-bold mb-5">
-                            {videoData && `${formatNumber(videoData.statistics.viewCount)} views  ${formatPublishedDate(videoData.snippet.publishedAt)}`}
-                        </div>
-                        <pre className="h-20 text-400 font-400 contain-content overflow-visible whitespace-pre-wrap" onClick={toggleDescription}>
-                            {videoData ? shortDescription(videoData.snippet.description) : 'Description is not available'}
-                        </pre>
-                    </div>
+                            <p className="mt-6 text-xl font-bold">{`${videoData.statistics.commentCount} Comments:`}</p>
 
-                    <p>{videoData.statistics.commentCount}</p>
+
+                        </div>
+                    )}
 
                 </div>
-            )}
+                <div className="">
+                    <CommentSection />
+                </div>
 
-            <div className="mt-5">
-                <CommentSection />
+            </div>
+
+
+            <div className="flex w-full lg:w-[30%] lg:ml-5 mt-5">
+                <InfiniteScroll
+                    className="w-full"
+                    dataLength={suggestionData.length}
+                    next={fetchMoreSuggestions}
+                    hasMore={suggestionData.length !== totalSuggestionResults}
+                    loader={
+                        <div className="w-full flex justify-center mt-5">
+                            <span className="w-8 h-8 border-4 border-gray-300 border-b-transparent rounded-full animate-spin"></span>
+                        </div>
+                    }
+                    style={{ overflow: 'auto', scrollbarWidth: 'none' }}
+                >
+                    <div className="w-[405px] min-w-[300px] pt-6 pr-6">
+                        {suggestionData.map(
+                            (element, index) =>
+                                element.snippet && <SuggestionCard key={index} info={element} />
+                        )}
+                    </div>
+                </InfiniteScroll>
             </div>
         </div>
     );

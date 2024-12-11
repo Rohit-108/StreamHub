@@ -37,5 +37,14 @@ export function makeRandomMessage(length) {
         counter += 1;
     }
     return result;
+
 }
+
+
+// src/utils/helper.js
+export const filterData = (query, data) => {
+    return data.filter((item) =>
+        item.toLowerCase().includes(query.toLowerCase())
+    );
+};
 
