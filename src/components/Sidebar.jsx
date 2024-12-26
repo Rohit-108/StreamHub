@@ -16,7 +16,7 @@ const Sidebar = () => {
 
 
     return (
-        <div className=" sticky top-0 p-3 shadow-lg w-[230px] ">
+        <div className=" sticky top-0 p-2.5 shadow-lg w-[230px] ">
 
             <ul className="w-[200px] ">
                 <Link to="/"  >
