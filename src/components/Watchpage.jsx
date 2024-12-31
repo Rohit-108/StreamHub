@@ -108,24 +108,24 @@ const Watchpage = () => {
                             <h1 className="font-bold text-xl">{videoData.snippet.title}</h1>
                             <div className="flex items-center justify-between">
                                 <div className="gap-y-10 flex items-center justify-between">
-                                    <div className="gap-y-2.5 gap-x-5 flex items-center justify-between">
+                                    <div className="gap-y-2.5 gap-x-1 flex items-center justify-between">
                                         <img className="w-12 h-12 rounded-full" alt="user" src={videoData && videoData.snippet.thumbnails.medium.url} />
-                                        <div className="mx-5">
+                                        <div className="mx-1">
                                             <p className="font-bold mt-1">{videoData.snippet.channelTitle}</p>
                                             <p className="text-[#444] text-[16px]">{videoData ? `${formatNumber(videoData.statistics.subscriberCount)} subscribers` : 'unavailable'}</p>
                                         </div>
                                     </div>
-                                    <button className="text-white font-500 py-2 px-4 bg-[#151515] rounded-3xl">Subscribe</button>
+                                    <button className="text-white font-500 py-2 px-4 ml-8 bg-[#151515] rounded-3xl">Subscribe</button>
                                 </div>
                                 <div className="gap-y-3 gap-x-3  flex items-center justify-between">
                                     <div className="flex flex-nowrap py-2.5 px-3.5 border border-none">
-                                        <button className="bg-[#0000000d]"><i className='mr-1 scale-1 rounded-l-2xl rounded-bl-2xl
+                                        <button className="bg-[#0000000d]"><i className='bx bx-like mr-1 scale-1 rounded-l-2xl rounded-bl-2xl
                                 border border-r-gray-[#999999] bx-like'></i>{videoData ? formatNumber(videoData.statistics.likeCount) : 'unavailable'}</button>
-                                        <button className="bg-[#0000000d]"><i className='mr-1 scale-1  bx-dislike'></i></button>
+                                        <button className="bg-[#0000000d]"><i className='bx bx-dislike mr-1 scale-1  bx-dislike'></i></button>
                                     </div>
-                                    <button className='flex flex-nowrap py-1.5 px-2.5 border border-none rounded-2xl bg-[#0000000d] items-center'><i className='mr-1 scale-1  bx-share'></i>Share</button>
-                                    <button className='flex flex-nowrap py-1.5 px-2.5 border border-none rounded-2xl bg-[#0000000d] items-center'><i className='mr-1 scale-1 bx-down-arrow-alt'></i>Download</button>
-                                    <button className='flex flex-nowrap py-1.5 px-2.5 border border-none rounded-2xl bg-[#0000000d] items-center'><i className='mr-1 scale-1  bx-dots-horizontal-rounded'></i></button>
+                                    <button className='flex flex-nowrap py-1.5 px-2.5 border border-none rounded-2xl bg-[#0000000d] items-center'><i className='bx bx-share mr-1 scale-1  bx-share'></i>Share</button>
+                                    <button className='flex flex-nowrap py-1.5 px-2.5 border border-none rounded-2xl bg-[#0000000d] items-center'><i className='bx bx-down-arrow-alt mr-1 scale-1 bx-down-arrow-alt'></i>Download</button>
+                                    <button className='flex flex-nowrap py-1.5 px-2.5 border border-none rounded-2xl bg-[#0000000d] items-center'><i className='mr-1 scale-1  bx bx-dots-horizontal-rounded'></i></button>
                                 </div>
                             </div>
 
@@ -165,7 +165,7 @@ const Watchpage = () => {
                     }
                     style={{ overflow: 'auto', scrollbarWidth: 'none' }}
                 >
-                    <div className="w-[405px] min-w-[300px] pt-3 pr-6">
+                    <div className="w-[405px] min-w-[300px] pt-5 pr-6">
                         {suggestionData.map(
                             (element, index) =>
                                 element.snippet && <SuggestionCard key={index} info={element} />

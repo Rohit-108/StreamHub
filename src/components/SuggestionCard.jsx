@@ -1,12 +1,14 @@
-import Link from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 
 const SuggestionCard = ({ info }) => {
-    if (!info || !info.snippet) {
-        return null; // Prevent rendering if info or snippet is invalid
+    if (!info || !info.snippet || !info.statistics) {
+        return null; // Prevent rendering if info, snippet, or statistics are invalid
     }
 
-    const { snippet } = info;
+    const { snippet, statistics } = info;
     const { channelTitle, title, thumbnails, publishedAt } = snippet;
+    const { viewCount } = statistics;
 
     const formatPublishedDate = (dateString) => {
         const publishedDate = new Date(dateString);
@@ -28,23 +30,44 @@ const SuggestionCard = ({ info }) => {
         }
     };
 
+    const countToDisplayCount = (views) => {
+        if (views >= 1000 && views < 1000000) {
+            return `${(views / 1000).toFixed(1)}K`;
+        } else if (views >= 1000000 && views < 1000000000) {
+            return `${(views / 1000000).toFixed(1)}M`;
+        } else if (views >= 1000000000) {
+            return `${(views / 1000000000).toFixed(1)}B`;
+        } else {
+            return views || "Unavailable";
+        }
+    };
+
     return (
-        <Link to={`/watching=${props.url}`} onClick={() => { setVideoId(props.url) }}>
-            <div className="flex mb-4">
-                <img className="mr-2 h-[94px] w-[168px] aspect-[16/9] rounded-lg" alt="img" src={thumbnails.medium.url} />
-                <div className="text-black leading-2 font-500 mb-1.2">
-                    <li className="text-black text-sm leading-5 font-medium mb-1">
-                        {title.length > 80 ? title.slice(0, 81) + "..." : title}
-                    </li>
-                    <li className="text-sm text-gray-600">{channelTitle}</li>
-                    <div className="flex items-center space-x-1 text-gray-500 text-xm">
-                        <li className="text-gray-600">{formatPublishedDate(publishedAt)}</li>
+        <Link
+            to={`/watching=${info.id?.videoId || ""}`} // Ensure videoId is used correctly
+            className="no-underline"
+        >
+            <div className="flex flex-col sm:flex-row mb-10 sm:mb-4 ">
+                <img
+                    className="mb-4 sm:mb-0 sm:mr-2 rounded-lg sm:w-[168px] sm:h-[94px] w-full aspect-video"
+                    alt="thumbnail"
+                    src={thumbnails?.medium?.url || ""}
+                />
+                <div className="px-3 sm:px-0">
+                    <h5 className="text-black text-sm leading-5 font-medium mb-1">
+                        {title.length > 80 ? `${title.slice(0, 80)}...` : title}
+                    </h5>
+                    <p className="text-gray-500 text-xs">{channelTitle || "Unknown Channel"}</p>
+                    <div className="text-gray-500 text-xs">
+                        <span className="text-gray-600">
+                            {countToDisplayCount(viewCount)} views
+                        </span>{" "}
+                        • <span>{formatPublishedDate(publishedAt)}</span>
                     </div>
                 </div>
             </div>
         </Link>
-
     );
 };
 
-export default SuggestionCard
+export default SuggestionCard;
