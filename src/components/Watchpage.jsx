@@ -152,7 +152,7 @@ const Watchpage = () => {
             </div>
 
 
-            <div className="flex w-full lg:w-[30%] lg:ml-5 mt-5">
+            <div className="flex w-full lg:w-[30%]">
                 <InfiniteScroll
                     className="w-full"
                     dataLength={suggestionData.length}
@@ -165,7 +165,7 @@ const Watchpage = () => {
                     }
                     style={{ overflow: 'auto', scrollbarWidth: 'none' }}
                 >
-                    <div className="w-[405px] min-w-[300px] pt-6 pr-6">
+                    <div className="w-[405px] min-w-[300px] pt-3 pr-6">
                         {suggestionData.map(
                             (element, index) =>
                                 element.snippet && <SuggestionCard key={index} info={element} />

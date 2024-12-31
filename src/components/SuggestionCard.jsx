@@ -1,3 +1,5 @@
+import Link from "react-router-dom";
+
 const SuggestionCard = ({ info }) => {
     if (!info || !info.snippet) {
         return null; // Prevent rendering if info or snippet is invalid
@@ -27,18 +29,21 @@ const SuggestionCard = ({ info }) => {
     };
 
     return (
-        <div className="p-2 m-1 cursor-pointer rounded-lg w-[500px] md:w-[400px] flex">
-            <img className="mr-2 h-[94px] w-[168px] aspect-[16/9] rounded-lg" alt="img" src={thumbnails.medium.url} />
-            <div className="flex flex-col justify-between">
-                <li className="text-black text-sm leading-5 font-medium mb-1">
-                    {title.length > 80 ? title.slice(0, 81) + "..." : title}
-                </li>
-                <li className="text-sm text-gray-600">{channelTitle}</li>
-                <div className="flex items-center space-x-1 text-gray-500 text-xm">
-                    <li className="text-gray-600">{formatPublishedDate(publishedAt)}</li>
+        <Link to={`/watching=${props.url}`} onClick={() => { setVideoId(props.url) }}>
+            <div className="flex mb-4">
+                <img className="mr-2 h-[94px] w-[168px] aspect-[16/9] rounded-lg" alt="img" src={thumbnails.medium.url} />
+                <div className="text-black leading-2 font-500 mb-1.2">
+                    <li className="text-black text-sm leading-5 font-medium mb-1">
+                        {title.length > 80 ? title.slice(0, 81) + "..." : title}
+                    </li>
+                    <li className="text-sm text-gray-600">{channelTitle}</li>
+                    <div className="flex items-center space-x-1 text-gray-500 text-xm">
+                        <li className="text-gray-600">{formatPublishedDate(publishedAt)}</li>
+                    </div>
                 </div>
             </div>
-        </div>
+        </Link>
+
     );
 };
 
