@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const SuggestionCard = ({ info }) => {
     if (!info || !info.snippet || !info.statistics) {
-        return null; // Prevent rendering if info, snippet, or statistics are invalid
+        return null;
     }
 
     const { snippet, statistics } = info;
